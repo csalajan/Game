@@ -12,6 +12,8 @@ namespace Assets.Scripts.Controllers
     {
         private float upMove = 0.0F;
         public Attack[] Abilities;
+        private RaycastHit hit;
+        
         
         public override void Start()
         {
@@ -77,6 +79,19 @@ namespace Assets.Scripts.Controllers
                 if (Input.GetButton("Cancel"))
                 {
                     ClearTarget();
+                }
+
+                if (Input.GetMouseButtonDown(0)) // for standalone
+                {
+                    
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    if (Physics.Raycast(ray, out hit, 1000f))
+                    {
+                        if (hit.collider.gameObject.tag == "Enemy")
+                        {
+                            Target(hit.collider.gameObject.GetComponent<Character>());
+                        }
+                    }
                 }
 
                 if (controller.isGrounded)
