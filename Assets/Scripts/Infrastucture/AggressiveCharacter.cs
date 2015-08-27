@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Assets.Scripts.Models;
 using UnityEngine;
 
 namespace Assets.Scripts.Infrastucture
@@ -22,6 +23,7 @@ namespace Assets.Scripts.Infrastucture
 
             if (chasing)
             {
+                Target(target);
                 transform.rotation = Quaternion.Slerp(transform.rotation,
                     Quaternion.LookRotation(player.transform.position - transform.position), turnSpeed*Time.deltaTime);
 
@@ -41,9 +43,14 @@ namespace Assets.Scripts.Infrastucture
                 if (distance < attackThreshold && Time.time > attackTime)
                 {
                     //Attack
-                    attackTime = Time.time + attackDelay;
                     anim.Stop();
                     anim.PlayQueued(animations.Attack);
+                    Attack(new Attack
+                    {
+                        Damage = 5,
+                        Animation = "attack1"
+                    });
+                    attackTime = Time.time + attackDelay;
                 }
 
                 if (distance < attackThreshold)

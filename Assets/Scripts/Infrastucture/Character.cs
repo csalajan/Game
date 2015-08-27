@@ -97,17 +97,17 @@ namespace Assets.Scripts.Infrastucture
             controller.Move(new Vector3(0, jumpSpeed, 0) * Time.deltaTime);
         }
 
-        protected Vector3 Gravity(Vector3 moveDirection)
+        protected Vector3 Gravity(ref Vector3 moveDirection)
         {
-            //if (controller.isGrounded)
-                moveDirection.y -= gravity * Time.deltaTime;
+            
+            moveDirection.y -= gravity * Time.deltaTime;
 
             return moveDirection;
         }
 
-        protected void Move(Vector3 moveDirection)
+        protected void Move(ref Vector3 moveDirection)
         {
-            controller.Move(Gravity(moveDirection) * Time.deltaTime);
+            controller.Move(Gravity(ref moveDirection) * Time.deltaTime);
         }
     }
 }

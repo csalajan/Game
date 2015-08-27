@@ -10,6 +10,7 @@ namespace Assets.Scripts.Controllers
 {
     public class PlayerController : Character
     {
+        private float upMove = 0.0F;
         public Attack[] Abilities;
         
         public override void Start()
@@ -47,7 +48,7 @@ namespace Assets.Scripts.Controllers
             
             if(!IsDead())
             {
-                var moveDirection = new Vector3(0, 0, 0);
+                var moveDirection = new Vector3(0, upMove, 0);
                 float walking = Input.GetAxis("Vertical")*walkSpeed;
                 float turning = Input.GetAxis("Horizontal")*turnSpeed;
                 Walk(walking, turning);
@@ -78,9 +79,9 @@ namespace Assets.Scripts.Controllers
                         moveDirection.y = jumpSpeed; // = Jump(moveDirection, jumpSpeed);
                     }
                 }
-
                 
-                Move(moveDirection);
+                Move(ref moveDirection);
+                upMove = moveDirection.y;
             }
         }
 
