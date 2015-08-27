@@ -72,6 +72,11 @@ namespace Assets.Scripts.Controllers
                     TargetClosestEnemy();
                 }
 
+                if (Input.GetButton("Cancel"))
+                {
+                    ClearTarget();
+                }
+
                 if (controller.isGrounded)
                 {
                     if (Input.GetButton("Jump"))
@@ -93,12 +98,15 @@ namespace Assets.Scripts.Controllers
 
             foreach (var enemy in enemies)
             {
-                var diff = (enemy.transform.position - transform.position);
-                var curDistance = diff.sqrMagnitude;
-                if (curDistance < distance)
+                if (!enemy.GetComponent<Character>().IsDead())
                 {
-                    closest = enemy;
-                    distance = curDistance;
+                    var diff = (enemy.transform.position - transform.position);
+                    var curDistance = diff.sqrMagnitude;
+                    if (curDistance < distance)
+                    {
+                        closest = enemy;
+                        distance = curDistance;
+                    }
                 }
             }
 

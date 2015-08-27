@@ -17,7 +17,8 @@ namespace Assets.Creatures
                 Run = "run",
                 Attack = "attack1",
                 Die = "die",
-                GetHit = "hitleft"
+                GetHit = "hitleft",
+                Idle = "idle"
             };
         }
     }

@@ -11,6 +11,7 @@ namespace Assets.Scripts.Infrastucture
     public abstract class Character : MonoBehaviour
     {
         public float hitPoints = 100F;
+        public float maxHitPoints = 100F;
         private bool dead;
         public Animation anim;
         public CharacterController controller;
@@ -53,9 +54,20 @@ namespace Assets.Scripts.Infrastucture
             }
         }
 
+        protected void Idle()
+        {
+            anim.Stop(animations.Walk);
+            anim.PlayQueued(animations.Idle);
+        }
+
         protected void Target(Character character)
         {
             target = character;
+        }
+
+        protected void ClearTarget()
+        {
+            target = null;
         }
 
         protected void Attack(Attack attack)
