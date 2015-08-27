@@ -12,12 +12,16 @@ namespace Assets.Scripts.Infrastucture
         public int curHealth = 100;
         public Character owner;
 
-        public float healthBarLength;
+        protected float healthBarLength;
+        protected float healthBarBackgroundLength;
+        protected GUIStyle healthStyle;
 
         // Use this for initialization
         void Start()
         {
             healthBarLength = Screen.width / 6;
+            healthBarBackgroundLength = Screen.width / 6;
+            
         }
 
         // Update is called once per frame
@@ -28,7 +32,12 @@ namespace Assets.Scripts.Infrastucture
 
         void OnGUI()
         {
-            GUI.Box(new Rect(0, 10, healthBarLength, 20), curHealth + "/" + maxHealth);
+            healthStyle = new GUIStyle(GUI.skin.box)
+            {
+                normal = { background = MakeTex(2, 2, new Color(0f, 1f, 0f, 0.5f)) }
+            };
+            GUI.Box(new Rect(0, 10, healthBarBackgroundLength, 20), owner.hitPoints + "/" + owner.maxHitPoints);
+            GUI.Box(new Rect(0, 10, healthBarLength, 20), "", healthStyle);
         }
 
         public void AddjustCurrentHealth(int adj)
@@ -45,6 +54,19 @@ namespace Assets.Scripts.Infrastucture
                 maxHealth = 1;
 
             healthBarLength = (Screen.width / 6) * (owner.hitPoints / owner.maxHitPoints);
+        }
+
+        protected Texture2D MakeTex(int width, int height, Color col)
+        {
+            Color[] pix = new Color[width * height];
+            for (int i = 0; i < pix.Length; ++i)
+            {
+                pix[i] = col;
+            }
+            Texture2D result = new Texture2D(width, height);
+            result.SetPixels(pix);
+            result.Apply();
+            return result;
         }
     }
 }

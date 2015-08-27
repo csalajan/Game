@@ -12,8 +12,16 @@ namespace Assets.Scripts.Infrastucture
 
         void OnGUI()
         {
+            healthStyle = new GUIStyle(GUI.skin.box)
+            {
+                normal = { background = MakeTex(2, 2, new Color(1f, 0f, 0f, 0.5f)) }
+            };
             if (owner != null)
-                GUI.Box(new Rect(700, 10, healthBarLength, 20), owner.hitPoints + "/" + owner.maxHitPoints);
+            {
+                GUI.Box(new Rect(700, 10, healthBarBackgroundLength, 20), owner.hitPoints + "/" + owner.maxHitPoints);
+                GUI.Box(new Rect(700, 10, healthBarLength, 20), "", healthStyle);
+
+            }
         }
 
         void Update()
