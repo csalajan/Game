@@ -9,8 +9,10 @@ namespace Assets.Creatures
 {
     public class Ghoul : PatrolController
     {
+        
         public override void Start()
         {
+            Name = "Ghoul";
             animations = new Animations
             {
                 Walk = "walk",

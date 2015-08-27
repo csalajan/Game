@@ -18,7 +18,7 @@ namespace Assets.Scripts.Infrastucture
             };
             if (owner != null)
             {
-                GUI.Box(new Rect(700, 10, healthBarBackgroundLength, 20), owner.hitPoints + "/" + owner.maxHitPoints);
+                GUI.Box(new Rect(700, 10, healthBarBackgroundLength, 35), owner.hitPoints + "/" + owner.maxHitPoints + "\n" + owner.Name);
                 if (healthBarLength > 0)
                     GUI.Box(new Rect(700, 10, healthBarLength, 20), "", healthStyle);
 

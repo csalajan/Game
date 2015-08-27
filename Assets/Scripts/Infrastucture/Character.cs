@@ -10,6 +10,8 @@ namespace Assets.Scripts.Infrastucture
 {
     public abstract class Character : MonoBehaviour
     {
+        public string Name { get; set; }
+
         public float hitPoints = 100F;
         public float maxHitPoints = 100F;
         private bool dead;
