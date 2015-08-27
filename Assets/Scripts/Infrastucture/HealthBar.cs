@@ -37,7 +37,8 @@ namespace Assets.Scripts.Infrastucture
                 normal = { background = MakeTex(2, 2, new Color(0f, 1f, 0f, 0.5f)) }
             };
             GUI.Box(new Rect(0, 10, healthBarBackgroundLength, 20), owner.hitPoints + "/" + owner.maxHitPoints);
-            GUI.Box(new Rect(0, 10, healthBarLength, 20), "", healthStyle);
+            if (healthBarLength > 0)
+                GUI.Box(new Rect(0, 10, healthBarLength, 20), "", healthStyle);
         }
 
         public void AddjustCurrentHealth(int adj)

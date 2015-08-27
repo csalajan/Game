@@ -20,11 +20,11 @@ namespace Assets.Scripts.Infrastucture
         public float attackRange = 5;
 
         public float walkSpeed = 10.0F;
-        protected const float runSpeed = 30.0F;
+        protected const float runSpeed = 20.0F;
         protected const float turnSpeed = 50.0F;
         protected const float jumpSpeed = 16.0F;
 
-        protected float attackDelay = 10F;
+        protected float attackDelay = 3F;
 
         public Animations animations;
 

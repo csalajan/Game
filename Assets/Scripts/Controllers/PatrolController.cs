@@ -10,7 +10,7 @@ namespace Assets.Scripts.Controllers
 {
     public class PatrolController : AggressiveCharacter
     {
-        public Vector3 waypoint;
+        private Vector3 waypoint;
         private int currentWaypoint;
         private bool loop = true;
         private float dampingLook = 6.0f;

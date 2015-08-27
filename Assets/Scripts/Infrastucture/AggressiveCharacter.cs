@@ -10,11 +10,11 @@ namespace Assets.Scripts.Infrastucture
 {
     public abstract class AggressiveCharacter : Character
     {
-        public GameObject player;
+        public Character player;
         protected bool chasing;
-        protected float attackThreshold;
-        protected float giveUpThreshold;
-        protected float chaseThreshold;
+        protected float attackThreshold = 3f;
+        protected float giveUpThreshold = 20f;
+        protected float chaseThreshold = 15f;
         protected float attackTime;
 
         public void CheckAggro()
@@ -56,11 +56,12 @@ namespace Assets.Scripts.Infrastucture
                 if (distance < attackThreshold)
                 {
                     // Aggro Idle
+                    Idle();
                 }
             }
             else
             {
-                if (distance < chaseThreshold && !target.IsDead())
+                if (distance < chaseThreshold && !player.IsDead())
                 {
                     chasing = true;
                 }

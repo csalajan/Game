@@ -19,7 +19,9 @@ namespace Assets.Scripts.Controllers
             {
                 Walk = "RunCycle",
                 Idle = "Idle_1",
-                Attack = "Attack_1"
+                Attack = "Attack_1",
+                GetHit = "GetHit",
+                Die = "Die"
             };
 
             Abilities = new Attack[3];
