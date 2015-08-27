@@ -21,17 +21,20 @@ namespace Assets.Scripts.Controllers
 
         public override void Update()
         {
-            if (currentWaypoint < waypoints.Length)
+            if (!IsDead())
             {
-                CheckAggro();
-                if (!chasing)
-                    Patrol();
-            }
-            else
-            {
-                if (loop)
+                if (currentWaypoint < waypoints.Length)
                 {
-                    currentWaypoint = 0;
+                    CheckAggro();
+                    if (!chasing)
+                        Patrol();
+                }
+                else
+                {
+                    if (loop)
+                    {
+                        currentWaypoint = 0;
+                    }
                 }
             }
         }

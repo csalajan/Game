@@ -15,7 +15,9 @@ namespace Assets.Creatures
             {
                 Walk = "walk",
                 Run = "run",
-                Attack = "attack1"
+                Attack = "attack1",
+                Die = "die",
+                GetHit = "hitleft"
             };
         }
     }

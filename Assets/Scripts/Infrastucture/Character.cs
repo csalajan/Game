@@ -16,6 +16,7 @@ namespace Assets.Scripts.Infrastucture
         public CharacterController controller;
         public Character target;
         public const float gravity = 50.0F;
+        public float attackRange = 5;
 
         public float walkSpeed = 10.0F;
         protected const float runSpeed = 30.0F;
@@ -59,12 +60,15 @@ namespace Assets.Scripts.Infrastucture
 
         protected void Attack(Attack attack)
         {
-            if (target != null)
-            {
-                target.SendMessage("GetHit", attack.Damage);
-            }
             anim.Stop();
             anim.PlayQueued(attack.Animation);
+            if (target != null)
+            {
+                if ((target.transform.position - transform.position).magnitude <= attackRange)
+                {
+                    target.SendMessage("GetHit", attack.Damage);
+                }
+            }
         }
 
         public void GetHit(float damage)
@@ -72,6 +76,8 @@ namespace Assets.Scripts.Infrastucture
             if (hitPoints <= 0) return;
 
             hitPoints -= damage;
+            anim.Stop();
+            anim.PlayQueued(animations.GetHit);
             if (hitPoints <= 0)
             {
                 Die();
@@ -80,7 +86,9 @@ namespace Assets.Scripts.Infrastucture
 
         protected void Die()
         {
-            
+            dead = true;
+            anim.Stop();
+            anim.PlayQueued(animations.Die);
         }
 
         protected void Jump()

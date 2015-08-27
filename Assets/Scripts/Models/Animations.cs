@@ -12,5 +12,7 @@ namespace Assets.Scripts.Models
         public string Attack;
         public string Jump;
         public string Idle;
+        public string Die;
+        public string GetHit;
     }
 }
