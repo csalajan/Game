@@ -22,10 +22,10 @@ namespace Assets.Scripts.Infrastucture
         public CharacterController controller;
         public Character target;
         public const float gravity = 50.0F;
-        public float attackRange = 5;
-        public float floatingValue = 1;
+        protected float attackRange = 5;
+        protected float floatingValue = 1;
 
-		public float walkSpeed = 10.0F;
+        protected float walkSpeed = 10.0F;
 		protected float slowSpeed = 1.0F;
 		protected float riseSpeed = 0.0F;
         protected const float runSpeed = 20.0F;
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Infrastucture
 
         protected float attackDelay = 3F;
 
-        public Animations animations;
+        protected Animations animations;
 
         protected Attack lastAttack;
         private bool attacking;

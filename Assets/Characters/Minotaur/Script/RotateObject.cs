@@ -10,8 +10,8 @@ public class RotateObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetMouseButton(0)){
-        	thisTransform.Rotate(Vector3.up *-15* Input.GetAxis("Mouse X"));
+		if(Input.GetMouseButton(1)){
+        	thisTransform.Rotate(Vector3.up *-15* -Input.GetAxis("Mouse X"));
       	}
 	}
 }

@@ -11,7 +11,7 @@ namespace Assets.Scripts.Controllers
     public class PlayerController : Character
     {
         private float upMove = 0.0F;
-        public Attack[] Abilities;
+        private Attack[] Abilities;
         private RaycastHit hit;
         private float comboTimer = 0.0F;
         
