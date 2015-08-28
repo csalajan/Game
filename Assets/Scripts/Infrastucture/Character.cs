@@ -25,10 +25,12 @@ namespace Assets.Scripts.Infrastucture
         public float attackRange = 5;
         public float floatingValue = 1;
 
-        public float walkSpeed = 10.0F;
+		public float walkSpeed = 10.0F;
+		protected float slowSpeed = 1.0F;
+		protected float riseSpeed = 0.0F;
         protected const float runSpeed = 20.0F;
         protected const float turnSpeed = 50.0F;
-        protected const float jumpSpeed = 25.0F;
+		protected const float jumpSpeed = 25.0F;
 
         protected float attackDelay = 3F;
 
@@ -46,9 +48,9 @@ namespace Assets.Scripts.Infrastucture
             return dead;
         }
 
-        protected void Walk(float walkSpeed, float turnSpeed)
+		protected void Walk(float walkSpeed, float turnSpeed)
         {
-            transform.Translate(0, 0, walkSpeed*Time.deltaTime);
+			transform.Translate(0, 0, walkSpeed*Time.deltaTime/slowSpeed);
             transform.Rotate(0, turnSpeed*Time.deltaTime, 0);
 
             if (walkSpeed > 0.5 || walkSpeed < -0.5)

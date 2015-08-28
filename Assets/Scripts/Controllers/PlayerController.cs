@@ -14,7 +14,7 @@ namespace Assets.Scripts.Controllers
         public Attack[] Abilities;
         private RaycastHit hit;
         private float comboTimer = 0.0F;
-        
+		private float riseSpeed = 0.0F;
         
         public override void Start()
         {
@@ -56,7 +56,17 @@ namespace Assets.Scripts.Controllers
                 var moveDirection = new Vector3(0, upMove, 0);
                 float walking = Input.GetAxis("Vertical")*walkSpeed;
                 float turning = Input.GetAxis("Horizontal")*turnSpeed;
-                Walk(walking, turning);
+				if (controller.isGrounded)
+					slowSpeed = 1.0F;
+				if (riseSpeed > 0.0F)
+				{
+					if (riseSpeed < jumpSpeed/2.0F) 
+						riseSpeed *= 2.0F;
+					else
+						riseSpeed = 0.0F;
+					moveDirection.y += riseSpeed;
+				}
+				Walk(walking, turning);
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
@@ -123,9 +133,18 @@ namespace Assets.Scripts.Controllers
                     }
                     else
                     {
-                        floatingValue = 10;
+						if (floatingValue == 10)
+						{
+							floatingValue = 2;
+							riseSpeed = 1.0F;
+							slowSpeed = 2.0F;
+						}
+						else if (floatingValue == 1) 
+						{
+                        	floatingValue = 10;
+						}
                     }
-                }
+                }   
 
                 Move(ref moveDirection);
                 upMove = moveDirection.y;
