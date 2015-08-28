@@ -23,17 +23,18 @@ namespace Assets.Scripts.Infrastucture
         public Character target;
         public const float gravity = 50.0F;
         public float attackRange = 5;
+        public float floatingValue = 1;
 
         public float walkSpeed = 10.0F;
         protected const float runSpeed = 20.0F;
         protected const float turnSpeed = 50.0F;
-        protected const float jumpSpeed = 16.0F;
+        protected const float jumpSpeed = 25.0F;
 
         protected float attackDelay = 3F;
 
         public Animations animations;
 
-        private Attack lastAttack;
+        protected Attack lastAttack;
         private bool attacking;
 
         public abstract void Start();
@@ -129,9 +130,11 @@ namespace Assets.Scripts.Infrastucture
 
         protected Vector3 Gravity(ref Vector3 moveDirection)
         {
+            var modifiedGravity = gravity;
+            if (moveDirection.y <= 0)
+                modifiedGravity = gravity/floatingValue;
 
-            moveDirection.y -= gravity*Time.deltaTime;
-
+            moveDirection.y -= (modifiedGravity) * Time.deltaTime;
             return moveDirection;
         }
 

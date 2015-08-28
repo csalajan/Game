@@ -13,6 +13,7 @@ namespace Assets.Scripts.Controllers
         private float upMove = 0.0F;
         public Attack[] Abilities;
         private RaycastHit hit;
+        private float comboTimer = 0.0F;
         
         
         public override void Start()
@@ -56,10 +57,29 @@ namespace Assets.Scripts.Controllers
                 float walking = Input.GetAxis("Vertical")*walkSpeed;
                 float turning = Input.GetAxis("Horizontal")*turnSpeed;
                 Walk(walking, turning);
+
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    Attack(Abilities[0]);
+                    if (comboTimer <= 0.0F)
+                    {
+                        Attack(Abilities[0]);
+                        comboTimer = 3;
+                    }
+                    else
+                    {
+                        if (lastAttack == Abilities[1])
+                        {
+                            Attack(Abilities[2]);
+                            comboTimer = 0.0F;
+                        }
+                        else
+                        {
+                            Attack(Abilities[1]);
+                            comboTimer = 3;
+                        }
+                    }
                 }
+                comboTimer -= Time.deltaTime;
 
                 if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
@@ -94,11 +114,16 @@ namespace Assets.Scripts.Controllers
                     }
                 }
 
-                if (controller.isGrounded)
+                if (Input.GetButtonDown("Jump"))
                 {
-                    if (Input.GetButton("Jump"))
+                    if (controller.isGrounded)
                     {
-                        moveDirection.y = jumpSpeed; // = Jump(moveDirection, jumpSpeed);
+                        floatingValue = 1;
+                        moveDirection.y = jumpSpeed;
+                    }
+                    else
+                    {
+                        floatingValue = 10;
                     }
                 }
 
