@@ -22,22 +22,16 @@ namespace Assets.Scripts.Controllers
         public override void Start()
         {
             startPos = transform.position;
+            NewWaypoint();
         }
 
         public override void Update()
         {
             if (!IsDead())
             {
-                if (waypoint != null)
-                {
-                    CheckAggro();
-                    if (!chasing)
-                        Patrol();
-                }
-                else
-                {
-                    NewWaypoint();
-                }
+                CheckAggro();
+                if (!chasing)
+                    Patrol();
             }
             else
             {

@@ -33,8 +33,8 @@ namespace Assets.Scripts.Infrastucture
 
         public Animations animations;
 
-        private Color[] colors;
-        private bool logInitialFadeSequence = false;
+        private Attack lastAttack;
+        private bool attacking;
 
         public abstract void Start();
 
@@ -80,13 +80,21 @@ namespace Assets.Scripts.Infrastucture
 
         protected void Attack(Attack attack)
         {
-            anim.Stop();
-            anim.PlayQueued(attack.Animation);
+            if (!attacking)
+            {
+                anim.Stop();
+                anim.PlayQueued(attack.Animation);
+                lastAttack = attack;
+            }
+        }
+
+        public void SendHit()
+        {
             if (target != null)
             {
                 if ((target.transform.position - transform.position).magnitude <= attackRange)
                 {
-                    target.SendMessage("GetHit", attack.Damage);
+                    target.SendMessage("GetHit", lastAttack.Damage);
                 }
             }
         }
@@ -98,6 +106,7 @@ namespace Assets.Scripts.Infrastucture
             hitPoints -= damage;
             anim.Stop();
             anim.PlayQueued(animations.GetHit);
+            attacking = false;
             if (hitPoints <= 0)
             {
                 Die();
@@ -135,8 +144,18 @@ namespace Assets.Scripts.Infrastucture
         {
             if ((Time.time - deathTime) >= deadDuration)
             {
-                Destroy(GetComponent<GameObject>());
+                Destroy(gameObject);
             }
+        }
+
+        public void StartAttack()
+        {
+            attacking = true;
+        }
+
+        public void EndAttack()
+        {
+            attacking = false;
         }
     }
 }

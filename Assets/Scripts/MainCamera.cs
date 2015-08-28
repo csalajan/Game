@@ -4,18 +4,23 @@ using System.Collections;
 public class MainCamera : MonoBehaviour {
 
     public GameObject Avatar;
-    Transform target;
-    float distance = 12.0F;
+    private Vector3 offset;
+    public float damping = 1;
 
     void Start()
     {
-        target = Avatar.transform;
+        offset = Avatar.transform.position - transform.position;
     }
-
-    void Update()
+    
+    void LateUpdate()
     {
-        transform.position = target.position - target.forward * distance;
-        transform.position = new Vector3(transform.position.x, transform.position.y + 4.0f, transform.position.z);
-        transform.LookAt(target.position);
+        float currentAngle = transform.eulerAngles.y;
+        float desiredAngle = Avatar.transform.eulerAngles.y;
+        float angle = Mathf.LerpAngle(currentAngle, desiredAngle, damping);
+
+        Quaternion rotation = Quaternion.Euler(0, angle, 0);
+        transform.position = Avatar.transform.position - (rotation*offset);
+
+        transform.LookAt(Avatar.transform);
     }
 }

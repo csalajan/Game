@@ -22,6 +22,8 @@ namespace Assets.Creatures
                 GetHit = "hitleft",
                 Idle = "idle"
             };
+
+            base.Start();
         }
     }
 }

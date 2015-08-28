@@ -23,7 +23,7 @@ namespace Assets.Scripts.Infrastucture
 
             if (chasing)
             {
-                Target(target);
+                Target(player);
                 transform.rotation = Quaternion.Slerp(transform.rotation,
                     Quaternion.LookRotation(player.transform.position - transform.position), turnSpeed*Time.deltaTime);
 
