@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Assets.Scripts.Infrastucture
         public float hitPoints = 100F;
         public float maxHitPoints = 100F;
         private bool dead;
+        private float deathTime;
+        private float deadDuration = 10f;
         public Animation anim;
         public CharacterController controller;
         public Character target;
@@ -29,6 +32,9 @@ namespace Assets.Scripts.Infrastucture
         protected float attackDelay = 3F;
 
         public Animations animations;
+
+        private Color[] colors;
+        private bool logInitialFadeSequence = false;
 
         public abstract void Start();
 
@@ -101,27 +107,36 @@ namespace Assets.Scripts.Infrastucture
         protected void Die()
         {
             dead = true;
+            deathTime = Time.time;
             anim.Stop();
             anim.PlayQueued(animations.Die);
         }
 
         protected void Jump()
         {
-           //transform.Translate(0, jumpSpeed * Time.deltaTime, 0);
-            controller.Move(new Vector3(0, jumpSpeed, 0) * Time.deltaTime);
+            //transform.Translate(0, jumpSpeed * Time.deltaTime, 0);
+            controller.Move(new Vector3(0, jumpSpeed, 0)*Time.deltaTime);
         }
 
         protected Vector3 Gravity(ref Vector3 moveDirection)
         {
-            
-            moveDirection.y -= gravity * Time.deltaTime;
+
+            moveDirection.y -= gravity*Time.deltaTime;
 
             return moveDirection;
         }
 
         protected void Move(ref Vector3 moveDirection)
         {
-            controller.Move(Gravity(ref moveDirection) * Time.deltaTime);
+            controller.Move(Gravity(ref moveDirection)*Time.deltaTime);
+        }
+
+        public void Remove()
+        {
+            if ((Time.time - deathTime) >= deadDuration)
+            {
+                Destroy(GetComponent<GameObject>());
+            }
         }
     }
 }

@@ -49,8 +49,8 @@ namespace Assets.Scripts.Controllers
 
         public override void Update()
         {
-            
-            if(!IsDead())
+
+            if (!IsDead())
             {
                 var moveDirection = new Vector3(0, upMove, 0);
                 float walking = Input.GetAxis("Vertical")*walkSpeed;
@@ -83,7 +83,7 @@ namespace Assets.Scripts.Controllers
 
                 if (Input.GetMouseButtonDown(0)) // for standalone
                 {
-                    
+
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out hit, 1000f))
                     {
@@ -101,7 +101,7 @@ namespace Assets.Scripts.Controllers
                         moveDirection.y = jumpSpeed; // = Jump(moveDirection, jumpSpeed);
                     }
                 }
-                
+
                 Move(ref moveDirection);
                 upMove = moveDirection.y;
             }

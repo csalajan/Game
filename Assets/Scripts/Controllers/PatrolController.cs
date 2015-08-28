@@ -39,6 +39,10 @@ namespace Assets.Scripts.Controllers
                     NewWaypoint();
                 }
             }
+            else
+            {
+                Remove();
+            }
         }
 
         private void Patrol()
