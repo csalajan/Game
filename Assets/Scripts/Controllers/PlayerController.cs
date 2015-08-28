@@ -53,56 +53,27 @@ namespace Assets.Scripts.Controllers
             if (!IsDead())
             {
                 var moveDirection = new Vector3(0, upMove, 0);
-                float walking = Input.GetAxis("Vertical")*walkSpeed;
-                float turning = Input.GetAxis("Horizontal")*turnSpeed;
-				if (controller.isGrounded)
-					slowSpeed = 1.0F;
-				if (riseSpeed > 0.0F)
-				{
-					if (riseSpeed < jumpSpeed/2.0F) 
-						riseSpeed *= 2.0F;
-					else
-						riseSpeed = 0.0F;
-					moveDirection.y += riseSpeed;
-				}
-				Walk(walking, turning);
 
+                MovementModifiers(ref moveDirection);
+
+				Walk(Input.GetAxis("Vertical") * walkSpeed, Input.GetAxis("Horizontal") * turnSpeed);
+                
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    if (comboTimer <= 0.0F)
-                    {
-                        Attack(Abilities[0]);
-                        comboTimer = 3;
-                    }
-                    else
-                    {
-                        if (lastAttack == Abilities[1])
-                        {
-                            Attack(Abilities[2]);
-                            comboTimer = 0.0F;
-                        }
-                        else
-                        {
-                            Attack(Abilities[1]);
-                            comboTimer = 3;
-                        }
-                    }
+                    DoAttack();
                 }
                 comboTimer -= Time.deltaTime;
 
-                if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    Attack(Abilities[1]);
-                }
 
-                if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-                    Attack(Abilities[2]);
-                }
-
+                // Targetting
                 if (Input.GetButton("Target"))
                 {
                     TargetClosestEnemy();
+                }
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    TargetClickedEnemy();
                 }
 
                 if (Input.GetButton("Cancel"))
@@ -110,43 +81,85 @@ namespace Assets.Scripts.Controllers
                     ClearTarget();
                 }
 
-                if (Input.GetMouseButtonDown(0)) // for standalone
-                {
-
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    if (Physics.Raycast(ray, out hit, 1000f))
-                    {
-                        if (hit.collider.gameObject.tag == "Enemy")
-                        {
-                            Target(hit.collider.gameObject.GetComponent<Character>());
-                        }
-                    }
-                }
-
+                
+                // Jumping
                 if (Input.GetButtonDown("Jump"))
                 {
-                    if (controller.isGrounded)
-                    {
-                        floatingValue = 1;
-                        moveDirection.y = jumpSpeed;
-                    }
-                    else
-                    {
-						if (floatingValue == 10)
-						{
-							floatingValue = 2;
-							riseSpeed = 1.0F;
-							slowSpeed = 2.0F;
-						}
-						else if (floatingValue == 1) 
-						{
-                        	floatingValue = 10;
-						}
-                    }
+                    Jump(ref moveDirection);
                 }   
 
                 Move(ref moveDirection);
                 upMove = moveDirection.y;
+            }
+        }
+
+        private void MovementModifiers(ref Vector3 moveDirection)
+        {
+            if (controller.isGrounded)
+                slowSpeed = 1.0F;
+            if (riseSpeed > 0.0F)
+            {
+                if (riseSpeed < jumpSpeed / 2.0F)
+                    riseSpeed *= 2.0F;
+                else
+                    riseSpeed = 0.0F;
+                moveDirection.y += riseSpeed;
+            }
+        }
+
+        private void DoAttack()
+        {
+            if (comboTimer <= 0.0F)
+            {
+                Attack(Abilities[0]);
+                comboTimer = 3;
+            }
+            else
+            {
+                if (lastAttack == Abilities[1])
+                {
+                    Attack(Abilities[2]);
+                    comboTimer = 0.0F;
+                }
+                else
+                {
+                    Attack(Abilities[1]);
+                    comboTimer = 3;
+                }
+            }
+        }
+
+        private void TargetClickedEnemy()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 1000f))
+            {
+                if (hit.collider.gameObject.tag == "Enemy")
+                {
+                    Target(hit.collider.gameObject.GetComponent<Character>());
+                }
+            }
+        }
+
+        private void Jump(ref Vector3 moveDirection)
+        {
+            if (controller.isGrounded)
+            {
+                floatingValue = 1;
+                moveDirection.y = jumpSpeed;
+            }
+            else
+            {
+                if (floatingValue == 10)
+                {
+                    floatingValue = 2;
+                    riseSpeed = 1.0F;
+                    slowSpeed = 2.0F;
+                }
+                else if (floatingValue == 1)
+                {
+                    floatingValue = 10;
+                }
             }
         }
 

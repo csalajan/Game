@@ -124,12 +124,6 @@ namespace Assets.Scripts.Infrastucture
             anim.PlayQueued(animations.Die);
         }
 
-        protected void Jump()
-        {
-            //transform.Translate(0, jumpSpeed * Time.deltaTime, 0);
-            controller.Move(new Vector3(0, jumpSpeed, 0)*Time.deltaTime);
-        }
-
         protected Vector3 Gravity(ref Vector3 moveDirection)
         {
             var modifiedGravity = gravity;
