@@ -14,7 +14,6 @@ namespace Assets.Scripts.Controllers
         public Attack[] Abilities;
         private RaycastHit hit;
         private float comboTimer = 0.0F;
-		private float riseSpeed = 0.0F;
         
         public override void Start()
         {
