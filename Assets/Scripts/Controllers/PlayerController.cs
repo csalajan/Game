@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Assets.Scripts.Infrastucture;
 using Assets.Scripts.Models;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Assets.Scripts.Controllers
 {
@@ -56,8 +58,15 @@ namespace Assets.Scripts.Controllers
 
                 MovementModifiers(ref moveDirection);
 
-				Walk(Input.GetAxis("Vertical") * walkSpeed, Input.GetAxis("Horizontal") * turnSpeed);
-                
+                if (!onWall)
+                {
+                    Walk(Input.GetAxis("Vertical")*walkSpeed, Input.GetAxis("Horizontal")*turnSpeed);
+                }
+                else
+                {
+                    Climb(ref moveDirection);
+                }
+
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     DoAttack();
@@ -93,6 +102,34 @@ namespace Assets.Scripts.Controllers
             }
         }
 
+        private void Climb(ref Vector3 moveDirection)
+        {
+            var vertical = Input.GetAxis("Vertical") * walkSpeed;
+            var horizontal = Input.GetAxis("Horizontal") * walkSpeed;
+            if (vertical <= 0 && controller.isGrounded)
+            {
+                vertical = 0;
+                onWall = false;
+            }
+
+            moveDirection.y = vertical / 2;
+            transform.Translate((horizontal / 2) * Time.deltaTime, 0, 0);
+            //Input.GetAxis("Horizontal") * walkSpeed
+            
+
+            if (vertical > 0.5 || vertical < -0.5)
+            {
+                //anim.Stop(animations.Idle);
+                anim.Stop();
+                anim.PlayQueued(animations.Idle);
+            }
+            else
+            {
+                //anim.Stop(animations.Walk);
+                anim.PlayQueued(animations.Idle);
+            }
+        }
+
         private void MovementModifiers(ref Vector3 moveDirection)
         {
             if (controller.isGrounded)
@@ -109,24 +146,43 @@ namespace Assets.Scripts.Controllers
 
         private void DoAttack()
         {
-            if (comboTimer <= 0.0F)
+            if (!attacking)
             {
-                Attack(Abilities[0]);
-                comboTimer = 3;
-            }
-            else
-            {
-                if (lastAttack == Abilities[1])
+                if (comboTimer <= 0.0F)
                 {
-                    Attack(Abilities[2]);
-                    comboTimer = 0.0F;
+                    Attack(Abilities[0]);
+                    comboTimer = 1.5F;
                 }
                 else
                 {
-                    Attack(Abilities[1]);
-                    comboTimer = 3;
+                    if (lastAttack == Abilities[1])
+                    {
+                        Attack(Abilities[2]);
+                        comboTimer = 0.0F;
+                    }
+                    else
+                    {
+                        Attack(Abilities[1]);
+                        comboTimer = 1.5F;
+                    }
                 }
             }
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            
+            if (other.gameObject.tag == "Climbable")
+            {
+                onWall = true;
+                wallTransform = other.gameObject.transform;
+            }
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            onWall = false;
+            wallTransform = null;
         }
 
         private void TargetClickedEnemy()

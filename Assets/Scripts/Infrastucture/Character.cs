@@ -37,7 +37,10 @@ namespace Assets.Scripts.Infrastucture
         protected Animations animations;
 
         protected Attack lastAttack;
-        private bool attacking;
+        protected bool attacking;
+
+        protected bool onWall;
+        protected Transform wallTransform;
 
         public abstract void Start();
 
@@ -83,12 +86,9 @@ namespace Assets.Scripts.Infrastucture
 
         protected void Attack(Attack attack)
         {
-            if (!attacking)
-            {
-                anim.Stop();
-                anim.PlayQueued(attack.Animation);
-                lastAttack = attack;
-            }
+            anim.Stop();
+            anim.PlayQueued(attack.Animation);
+            lastAttack = attack;
         }
 
         public void SendHit()
@@ -126,11 +126,14 @@ namespace Assets.Scripts.Infrastucture
 
         protected Vector3 Gravity(ref Vector3 moveDirection)
         {
-            var modifiedGravity = gravity;
-            if (moveDirection.y <= 0)
-                modifiedGravity = gravity/floatingValue;
+            if (!onWall)
+            {
+                var modifiedGravity = gravity;
+                if (moveDirection.y <= 0)
+                    modifiedGravity = gravity/floatingValue;
 
-            moveDirection.y -= (modifiedGravity) * Time.deltaTime;
+                moveDirection.y -= (modifiedGravity)*Time.deltaTime;
+            }
             return moveDirection;
         }
 
