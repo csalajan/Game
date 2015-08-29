@@ -176,6 +176,10 @@ namespace Assets.Scripts.Controllers
             {
                 onWall = true;
                 wallTransform = other.gameObject.transform;
+                if (Physics.Raycast(transform.position, transform.forward, out hit))
+                {
+                    transform.rotation = Quaternion.LookRotation(-hit.normal);
+                }
             }
         }
 
