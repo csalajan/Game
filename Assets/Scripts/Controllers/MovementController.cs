@@ -13,10 +13,10 @@ namespace Assets.Scripts.Controllers
         private float walkSpeed = 10.0F;
         private float rotateSpeed = 150.0F;
         private float moveSpeed = 0.0F;
-        public float floatingValue = 1;
+        private float floatingValue = 1;
         private float slowSpeed = 1.0F;
         private float riseSpeed = 0.0F;
-        public float upMove = 0.0F;
+        private float upMove = 0.0F;
 
         private Animation anim;
 
