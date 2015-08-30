@@ -11,12 +11,15 @@ namespace Assets.Scripts.Controllers
         private float gravity = 50.0F;
         private float runSpeed = 20.0F;
         private float walkSpeed = 10.0F;
+        private float climbSpeed = 5.0F;
         private float rotateSpeed = 150.0F;
         private float moveSpeed = 0.0F;
         private float floatingValue = 1;
         private float slowSpeed = 1.0F;
         private float riseSpeed = 0.0F;
         private float upMove = 0.0F;
+
+        private Transform wallTransform;
 
         private Animation anim;
 
@@ -36,21 +39,36 @@ namespace Assets.Scripts.Controllers
 
         void Update()
         {
-            moveDirection = new Vector3((Input.GetMouseButton(1) ? Input.GetAxis("Horizontal") : 0), 0, Input.GetAxis("Vertical"));
+            if (isClimbing)
+            {
+                moveDirection = new Vector3((Input.GetMouseButton(1) ? Input.GetAxis("Horizontal") : 0),
+                    Input.GetAxis("Vertical"), 0);
 
+                moveDirection = transform.TransformDirection(moveDirection);
+                moveDirection *= climbSpeed;
+                moveStatus = "climbing";
+
+            }
+            else
+            {
+                moveDirection = new Vector3((Input.GetMouseButton(1) ? Input.GetAxis("Horizontal") : 0), 0,
+                    Input.GetAxis("Vertical"));
+
+                moveDirection = transform.TransformDirection(moveDirection);
+                moveDirection *= isWalking ? walkSpeed : runSpeed;
+
+                moveStatus = "idle";
+                if (moveDirection != Vector3.zero)
+                    moveStatus = isWalking ? "walking" : "running";
+
+                moveDirection.y += upMove;
+            }
             // if moving forward and to the side at the same time, compensate for distance
 //          if (Input.GetMouseButton(1) && Input.GetAxis("Horizontal") && Input.GetAxis("Vertical")) {
 //              moveDirection *= .7;
 //          }
 
-            moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= isWalking ? walkSpeed : runSpeed;
-                
-            moveStatus = "idle";
-            if (moveDirection != Vector3.zero)
-                moveStatus = isWalking ? "walking" : "running";
-
-            moveDirection.y += upMove;
+            
             
             if (Input.GetButtonDown("Jump"))
                 Jump();
@@ -63,11 +81,7 @@ namespace Assets.Scripts.Controllers
             {
                 transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed * Time.deltaTime, 0);
             }
-
-//            if (Input.GetMouseButton(1) || Input.GetMouseButton(0))
-//                Screen.lockCursor = true;
-//            else
-//                Screen.lockCursor = false;
+            
 
             // Toggle walking/running with the Shift key
             if (Input.GetAxis("Sprint") == 1)
@@ -77,6 +91,26 @@ namespace Assets.Scripts.Controllers
             Move();
             Animate();
             
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            RaycastHit hit;
+            if (other.gameObject.tag == "Climbable")
+            {
+                if (Physics.Raycast(transform.position, transform.forward, out hit))
+                {
+                    isClimbing = true;
+                    wallTransform = other.gameObject.transform;
+                    transform.rotation = Quaternion.LookRotation(-hit.normal);
+                }
+            }
+        }
+
+        void OnTriggerExit()
+        {
+            isClimbing = false;
+            wallTransform = null;
         }
 
         float GetSpeed()
@@ -163,6 +197,7 @@ namespace Assets.Scripts.Controllers
                     break;
                 case "walking":
                 case "running":
+                case "climbing":
                     anim.Stop("Idle_1");
                     anim.PlayQueued("RunCycle", QueueMode.CompleteOthers);
                     break;
