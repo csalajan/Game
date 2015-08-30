@@ -12,14 +12,16 @@ namespace Assets.Scripts.Controllers
         private float runSpeed = 20.0F;
         private float walkSpeed = 10.0F;
         private float rotateSpeed = 150.0F;
- 
-        private bool grounded = false;
-        private Vector3 moveDirection = Vector3.zero;
-        private bool isWalking = true;
-        private string moveStatus = "idle";
-        private bool jumping = false;
         private float moveSpeed = 0.0F;
- 
+
+        private Vector3 moveDirection = Vector3.zero;
+        private string moveStatus = "idle";
+
+        private bool grounded = false;
+        private bool isWalking = true;
+        private bool jumping = false;
+        private bool isClimbing = false;
+
         void Update()
         {
             // Only allow movement and jumps while grounded
