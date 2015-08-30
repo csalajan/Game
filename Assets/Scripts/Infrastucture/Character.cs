@@ -29,7 +29,7 @@ namespace Assets.Scripts.Infrastucture
 		protected float slowSpeed = 1.0F;
 		protected float riseSpeed = 0.0F;
         protected const float runSpeed = 20.0F;
-        protected const float turnSpeed = 50.0F;
+        protected const float turnSpeed = 80.0F;
 		protected const float jumpSpeed = 25.0F;
 
         protected float attackDelay = 3F;

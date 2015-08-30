@@ -174,10 +174,10 @@ namespace Assets.Scripts.Controllers
             
             if (other.gameObject.tag == "Climbable")
             {
-                onWall = true;
-                wallTransform = other.gameObject.transform;
                 if (Physics.Raycast(transform.position, transform.forward, out hit))
                 {
+                    onWall = true;
+                    wallTransform = other.gameObject.transform;
                     transform.rotation = Quaternion.LookRotation(-hit.normal);
                 }
             }
