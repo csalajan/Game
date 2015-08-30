@@ -13,8 +13,15 @@ namespace Assets.Scripts.Controllers
         private float walkSpeed = 10.0F;
         private float rotateSpeed = 150.0F;
         private float moveSpeed = 0.0F;
+        public float floatingValue = 1;
+        private float slowSpeed = 1.0F;
+        private float riseSpeed = 0.0F;
+        public float upMove = 0.0F;
+
+        private Animation anim;
 
         private Vector3 moveDirection = Vector3.zero;
+
         private string moveStatus = "idle";
 
         private bool grounded = false;
@@ -22,8 +29,14 @@ namespace Assets.Scripts.Controllers
         private bool jumping = false;
         private bool isClimbing = false;
 
+        void Start()
+        {
+            anim = GetComponent<Animation>();
+        }
+
         void Update()
         {
+            
             // Only allow movement and jumps while grounded
             if (grounded)
             {
@@ -42,10 +55,11 @@ namespace Assets.Scripts.Controllers
                 if (moveDirection != Vector3.zero)
                     moveStatus = isWalking ? "walking" : "running";
 
-                // Jump!
-                if (Input.GetButton("Jump"))
-                    moveDirection.y = jumpSpeed;
             }
+            
+            // Jump!
+            if (Input.GetButtonDown("Jump"))
+                Jump();
 
             // Allow turning at anytime. Keep the character facing in the same direction as the Camera if the right mouse button is down.
             if (Input.GetMouseButton(1))
@@ -62,17 +76,14 @@ namespace Assets.Scripts.Controllers
             else
                 Screen.lockCursor = false;
 
-            // Toggle walking/running with the T key
+            // Toggle walking/running with the Shift key
             if (Input.GetAxis("Sprint") == 1)
                 isWalking = !isWalking;
 
-            //Apply gravity
-            moveDirection.y -= gravity * Time.deltaTime;
-
-            //Move controller
-            var controller = GetComponent<CharacterController>();
-            var flags = controller.Move(moveDirection * Time.deltaTime);
-            grounded = (flags & CollisionFlags.Below) != 0;
+            Modifiers();
+            Move();
+            Animate();
+            
         }
 
         float GetSpeed()
@@ -94,6 +105,80 @@ namespace Assets.Scripts.Controllers
         float GetWalkSpeed()
         {
             return walkSpeed;
+        }
+
+        void ApplyGravity()
+        {
+            if (!isClimbing)
+            {
+                var modifiedGravity = gravity;
+                if (moveDirection.y <= 0)
+                    modifiedGravity = gravity / floatingValue;
+
+                moveDirection.y -= (modifiedGravity) * Time.deltaTime;
+            }
+        }
+
+        void Move()
+        {
+            ApplyGravity();
+            //Move controller
+            var controller = GetComponent<CharacterController>();
+            var flags = controller.Move(moveDirection * Time.deltaTime);
+            grounded = (flags & CollisionFlags.Below) != 0;
+            //upMove = (!grounded) ? moveDirection.y : 0.0F;
+        }
+
+        void Jump()
+        {
+            if (grounded)
+            {
+                floatingValue = 1;
+                moveDirection.y = jumpSpeed;
+            }
+            else
+            {
+                if (floatingValue == 10)
+                {
+                    floatingValue = 2;
+                    riseSpeed = 1.0F;
+                    slowSpeed = 2.0F;
+                }
+                else if (floatingValue == 1)
+                {
+                    floatingValue = 10;
+                }
+            }
+        }
+
+        void Modifiers()
+        {
+            if (grounded)
+                slowSpeed = 1.0F;
+            if (riseSpeed > 0.0F)
+            {
+                if (riseSpeed < jumpSpeed / 2.0F)
+                    riseSpeed *= 2.0F;
+                else
+                    riseSpeed = 0.0F;
+                moveDirection.y += riseSpeed;
+            }
+        }
+
+        void Animate()
+        {
+            switch (moveStatus)
+            {
+                case "idle":
+                    anim.Stop("RunCycle");
+                    anim.PlayQueued("Idle_1", QueueMode.CompleteOthers);
+                    break;
+                case "walking":
+                case "running":
+                    anim.Stop("Idle_1");
+                    anim.PlayQueued("RunCycle", QueueMode.CompleteOthers);
+                    break;
+            }
         }
     }
 }
