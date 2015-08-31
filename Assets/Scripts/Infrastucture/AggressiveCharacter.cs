@@ -16,6 +16,9 @@ namespace Assets.Scripts.Infrastucture
         protected float giveUpThreshold = 20f;
         protected float chaseThreshold = 15f;
         protected float attackTime;
+        protected float turnSpeed;
+        protected float runSpeed;
+        protected float walkSpeed;
 
         public void CheckAggro()
         {
@@ -56,7 +59,7 @@ namespace Assets.Scripts.Infrastucture
                 if (distance < attackThreshold)
                 {
                     // Aggro Idle
-                    Idle();
+                    //Idle();
                 }
             }
             else

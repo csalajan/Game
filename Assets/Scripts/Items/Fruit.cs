@@ -20,8 +20,12 @@ public class Fruit : MonoBehaviour {
 	
 	void OnTriggerEnter (Collider col)
 	{
+        if (col.gameObject.tag == "Player")
+	    {
+	        col.gameObject.SendMessage("CollectItem", "Fruit");
+	    }
 		transform.Translate (1000, 1000, 1000);
-		collected = true;
+		//collected = true;
 	}
 	
 	void Update () {
@@ -29,7 +33,7 @@ public class Fruit : MonoBehaviour {
 			delay -= Time.deltaTime;
 
 		if (delay <= 0.0F)
-			Application.LoadLevel (0);
+			//Application.LoadLevel (0);
 
 		if(transform.position == pos1)
 		{

@@ -51,7 +51,7 @@ namespace Assets.Scripts.Controllers
                 if (curTime == 0)
                 {
                     curTime = Time.time;
-                    Idle();
+                    //Idle();
                 }
 
                 if ((Time.time - curTime) >= idleDuration)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Infrastucture;
 using UnityEngine;
 
 namespace Assets.Scripts.Cameras
@@ -106,6 +107,7 @@ namespace Assets.Scripts.Cameras
 
             transform.rotation = rotation;
             transform.position = position;
+            UpdateHud();
         }
 
         private static float ClampAngle(float angle, float min, float max)
@@ -115,6 +117,17 @@ namespace Assets.Scripts.Cameras
             if (angle > 360)
                 angle -= 360;
             return Mathf.Clamp(angle, min, max);
+        }
+
+        private void UpdateHud()
+        {
+            HudItem[] hudItems = GetComponentsInChildren<HudItem>();
+            
+            foreach(var item in hudItems)
+            {
+                item.Redraw();
+            }
+
         }
     }
 }

@@ -12,10 +12,12 @@ namespace Assets.Scripts.Controllers
 {
     public class PlayerController : Character
     {
-        private float upMove = 0.0F;
         private Attack[] Abilities;
         private RaycastHit hit;
         private float comboTimer = 0.0F;
+        private int fruit;
+        private int coins;
+        private int nuts;
         
         public override void Start()
         {
@@ -54,19 +56,7 @@ namespace Assets.Scripts.Controllers
 
             if (!IsDead())
             {
-                var moveDirection = new Vector3(0, upMove, 0);
-
-                MovementModifiers(ref moveDirection);
-
-                if (!onWall)
-                {
-                    Walk(Input.GetAxis("Vertical")*walkSpeed, Input.GetAxis("Horizontal")*turnSpeed);
-                }
-                else
-                {
-                    Climb(ref moveDirection);
-                }
-
+                
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     DoAttack();
@@ -89,61 +79,11 @@ namespace Assets.Scripts.Controllers
                 {
                     ClearTarget();
                 }
-
                 
-                // Jumping
-                if (Input.GetButtonDown("Jump"))
-                {
-                    Jump(ref moveDirection);
-                }   
-
-                Move(ref moveDirection);
-                upMove = moveDirection.y;
             }
         }
 
-        private void Climb(ref Vector3 moveDirection)
-        {
-            var vertical = Input.GetAxis("Vertical") * walkSpeed;
-            var horizontal = Input.GetAxis("Horizontal") * walkSpeed;
-            if (vertical <= 0 && controller.isGrounded)
-            {
-                vertical = 0;
-                onWall = false;
-            }
-
-            moveDirection.y = vertical / 2;
-            transform.Translate((horizontal / 2) * Time.deltaTime, 0, 0);
-            //Input.GetAxis("Horizontal") * walkSpeed
-            
-
-            if (vertical > 0.5 || vertical < -0.5)
-            {
-                //anim.Stop(animations.Idle);
-                anim.Stop();
-                anim.PlayQueued(animations.Idle);
-            }
-            else
-            {
-                //anim.Stop(animations.Walk);
-                anim.PlayQueued(animations.Idle);
-            }
-        }
-
-        private void MovementModifiers(ref Vector3 moveDirection)
-        {
-            if (controller.isGrounded)
-                slowSpeed = 1.0F;
-            if (riseSpeed > 0.0F)
-            {
-                if (riseSpeed < jumpSpeed / 2.0F)
-                    riseSpeed *= 2.0F;
-                else
-                    riseSpeed = 0.0F;
-                moveDirection.y += riseSpeed;
-            }
-        }
-
+        
         private void DoAttack()
         {
             if (!attacking)
@@ -169,26 +109,6 @@ namespace Assets.Scripts.Controllers
             }
         }
 
-        void OnTriggerEnter(Collider other)
-        {
-            
-            if (other.gameObject.tag == "Climbable")
-            {
-                if (Physics.Raycast(transform.position, transform.forward, out hit))
-                {
-                    onWall = true;
-                    wallTransform = other.gameObject.transform;
-                    transform.rotation = Quaternion.LookRotation(-hit.normal);
-                }
-            }
-        }
-
-        void OnTriggerExit(Collider other)
-        {
-            onWall = false;
-            wallTransform = null;
-        }
-
         private void TargetClickedEnemy()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -197,28 +117,6 @@ namespace Assets.Scripts.Controllers
                 if (hit.collider.gameObject.tag == "Enemy")
                 {
                     Target(hit.collider.gameObject.GetComponent<Character>());
-                }
-            }
-        }
-
-        private void Jump(ref Vector3 moveDirection)
-        {
-            if (controller.isGrounded)
-            {
-                floatingValue = 1;
-                moveDirection.y = jumpSpeed;
-            }
-            else
-            {
-                if (floatingValue == 10)
-                {
-                    floatingValue = 2;
-                    riseSpeed = 1.0F;
-                    slowSpeed = 2.0F;
-                }
-                else if (floatingValue == 1)
-                {
-                    floatingValue = 10;
                 }
             }
         }
@@ -246,6 +144,29 @@ namespace Assets.Scripts.Controllers
             if (closest != null)
             {
                 Target(closest.GetComponent<Character>());
+            }
+        }
+
+        public int GetFruit()
+        {
+            return fruit;
+        }
+
+        public int GetCoins()
+        {
+            return coins;
+        }
+
+        public void CollectItem(string item)
+        {
+            switch (item)
+            {
+                case "Fruit":
+                    fruit++;
+                    break;
+                case "Coin":
+                    coins++;
+                    break;
             }
         }
     }

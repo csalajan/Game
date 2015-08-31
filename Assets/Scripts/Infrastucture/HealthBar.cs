@@ -8,9 +8,10 @@ namespace Assets.Scripts.Infrastucture
 {
     public class HealthBar : MonoBehaviour
     {
-        public int maxHealth = 100;
-        public int curHealth = 100;
+        protected int maxHealth = 100;
+        protected int curHealth = 100;
         public Character owner;
+        public GameObject fruit;
 
         protected float healthBarLength;
         protected float healthBarBackgroundLength;
@@ -32,6 +33,7 @@ namespace Assets.Scripts.Infrastucture
 
         void OnGUI()
         {
+            DrawHud();
             healthStyle = new GUIStyle(GUI.skin.box)
             {
                 normal = { background = MakeTex(2, 2, new Color(0f, 1f, 0f, 0.5f)) }
@@ -68,6 +70,11 @@ namespace Assets.Scripts.Infrastucture
             result.SetPixels(pix);
             result.Apply();
             return result;
+        }
+
+        void DrawHud()
+        {
+            GUI.DrawTexture(new Rect(0, 10, 100, 20), fruit.GetComponent<Texture>());
         }
     }
 }

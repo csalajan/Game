@@ -17,7 +17,11 @@ public class Coin : MonoBehaviour {
 
 	void OnTriggerEnter (Collider col)
 	{
-		Destroy(this.gameObject);
+        if (col.gameObject.tag == "Player")
+        {
+            col.gameObject.SendMessage("CollectItem", "Coin");
+        }
+        Destroy(this.gameObject);
 	}
 
 	void Update () {
