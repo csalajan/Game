@@ -94,8 +94,11 @@ namespace Assets.Scripts.Controllers
 
 
                 // Toggle walking/running with the Shift key
-                if (Input.GetAxis("Sprint") == 1)
-                    isWalking = !isWalking;
+                if (Input.GetButtonDown("Sprint"))
+                    isWalking = false;
+
+                if (Input.GetButtonUp("Sprint"))
+                    isWalking = true;
 
                 Modifiers();
                 Move();
