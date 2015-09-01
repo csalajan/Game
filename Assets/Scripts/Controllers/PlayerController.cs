@@ -93,7 +93,7 @@ namespace Assets.Scripts.Controllers
                 if (comboTimer <= 0.0F)
                 {
                     Attack(Abilities[0]);
-                    comboTimer = 1.5F;
+                    comboTimer = 2F;
                 }
                 else
                 {
@@ -105,7 +105,7 @@ namespace Assets.Scripts.Controllers
                     else
                     {
                         Attack(Abilities[1]);
-                        comboTimer = 1.5F;
+                        comboTimer = 2F;
                     }
                 }
             }

@@ -18,7 +18,7 @@ namespace Assets.Scripts.Infrastucture
         private bool dead;
         private float deathTime;
         private float deadDuration = 10f;
-        protected float attackRange = 5;
+        protected float attackRange = 2;
         protected float attackDelay = 3F;
 
         protected bool attacking;
@@ -61,12 +61,13 @@ namespace Assets.Scripts.Infrastucture
 
         public void SendHit()
         {
-            if (target != null)
+            
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 4, transform.forward, attackRange);
+
+            foreach (var enemy in hits)
             {
-                if ((target.transform.position - transform.position).magnitude <= attackRange)
-                {
-                    target.SendMessage("GetHit", lastAttack.Damage);
-                }
+                if (enemy.collider.tag != "Player")
+                    enemy.collider.SendMessage("GetHit", lastAttack.Damage, SendMessageOptions.DontRequireReceiver);
             }
         }
 
