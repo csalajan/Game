@@ -15,7 +15,7 @@ namespace Assets.Scripts.Controllers
         private Attack[] Abilities;
         private RaycastHit hit;
         private float comboTimer = 0.0F;
-        private int fruit;
+        private int fruit = 40;
         private int coins;
         private int nuts;
         
@@ -79,7 +79,9 @@ namespace Assets.Scripts.Controllers
                 {
                     ClearTarget();
                 }
-                
+
+                if (fruit == 0)
+                    Die();
             }
         }
 
@@ -152,6 +154,11 @@ namespace Assets.Scripts.Controllers
             return fruit;
         }
 
+        public void RemoveFruit(int num)
+        {
+            fruit -= num;
+        }
+
         public int GetCoins()
         {
             return coins;
@@ -167,6 +174,20 @@ namespace Assets.Scripts.Controllers
                 case "Coin":
                     coins++;
                     break;
+            }
+        }
+
+        public override void GetHit(int damage) 
+        {
+            if (fruit <= 0) return;
+
+            fruit -= damage;
+            anim.Stop();
+            anim.PlayQueued(animations.GetHit);
+            attacking = false;
+            if (fruit <= 0)
+            {
+                Die();
             }
         }
     }

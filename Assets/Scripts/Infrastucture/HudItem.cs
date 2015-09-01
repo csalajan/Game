@@ -16,7 +16,7 @@ namespace Assets.Scripts.Infrastucture
         protected abstract float posY { get; }
         protected string text;
         protected PlayerController player;
-        private GUIStyle style;
+        protected GUIStyle style;
 
         public abstract void SetValue();
 

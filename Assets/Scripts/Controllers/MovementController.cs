@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Infrastucture;
 
 namespace Assets.Scripts.Controllers
 {
@@ -23,6 +24,10 @@ namespace Assets.Scripts.Controllers
 
         private Animation anim;
 
+        private CharacterController controller;
+
+        private Character player;
+
         private Vector3 moveDirection = Vector3.zero;
 
         private string moveStatus = "idle";
@@ -35,62 +40,68 @@ namespace Assets.Scripts.Controllers
         void Start()
         {
             anim = GetComponent<Animation>();
+            controller = GetComponent<CharacterController>();
+            player = GetComponent<Character>();
+
         }
 
         void Update()
         {
-            if (isClimbing)
+            if (!player.IsDead())
             {
-                moveDirection = new Vector3((Input.GetMouseButton(1) ? Input.GetAxis("Horizontal") : 0),
-                    Input.GetAxis("Vertical"), 0);
+                if (isClimbing)
+                {
+                    moveDirection = new Vector3((Input.GetMouseButton(1) ? Input.GetAxis("Horizontal") : 0),
+                        Input.GetAxis("Vertical"), 0);
 
-                moveDirection = transform.TransformDirection(moveDirection);
-                moveDirection *= climbSpeed;
-                moveStatus = "climbing";
+                    moveDirection = transform.TransformDirection(moveDirection);
+                    moveDirection *= climbSpeed;
+                    moveStatus = "climbing";
 
-            }
-            else
-            {
-                moveDirection = new Vector3((Input.GetMouseButton(1) ? Input.GetAxis("Horizontal") : 0), 0,
-                    Input.GetAxis("Vertical"));
+                }
+                else
+                {
+                    moveDirection = new Vector3((Input.GetMouseButton(1) ? Input.GetAxis("Horizontal") : 0), 0,
+                        Input.GetAxis("Vertical"));
 
-                moveDirection = transform.TransformDirection(moveDirection);
-                moveDirection *= isWalking ? walkSpeed : runSpeed;
+                    moveDirection = transform.TransformDirection(moveDirection);
+                    moveDirection *= isWalking ? walkSpeed : runSpeed;
 
-                moveStatus = "idle";
-                if (moveDirection != Vector3.zero)
-                    moveStatus = isWalking ? "walking" : "running";
+                    moveStatus = "idle";
+                    if (moveDirection != Vector3.zero)
+                        moveStatus = isWalking ? "walking" : "running";
 
-                moveDirection.y += upMove;
-            }
-            // if moving forward and to the side at the same time, compensate for distance
+                    moveDirection.y += upMove;
+                }
+                // if moving forward and to the side at the same time, compensate for distance
 //          if (Input.GetMouseButton(1) && Input.GetAxis("Horizontal") && Input.GetAxis("Vertical")) {
 //              moveDirection *= .7;
 //          }
 
-            
-            
-            if (Input.GetButtonDown("Jump"))
-                Jump();
-            
-            if (Input.GetMouseButton(1))
-            {
-                transform.rotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
-            }
-            else
-            {
-                transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed * Time.deltaTime, 0);
-            }
-            
 
-            // Toggle walking/running with the Shift key
-            if (Input.GetAxis("Sprint") == 1)
-                isWalking = !isWalking;
 
-            Modifiers();
-            Move();
-            Animate();
-            
+                if (Input.GetButtonDown("Jump"))
+                    Jump();
+
+                if (Input.GetMouseButton(1))
+                {
+                    transform.rotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
+                }
+                else
+                {
+                    transform.Rotate(0, Input.GetAxis("Horizontal")*rotateSpeed*Time.deltaTime, 0);
+                }
+
+
+                // Toggle walking/running with the Shift key
+                if (Input.GetAxis("Sprint") == 1)
+                    isWalking = !isWalking;
+
+                Modifiers();
+                Move();
+                Animate();
+            }
+
         }
 
         void OnTriggerEnter(Collider other)
@@ -144,9 +155,8 @@ namespace Assets.Scripts.Controllers
         void Move()
         {
             ApplyGravity();
-            //Move controller
-            var controller = GetComponent<CharacterController>();
-            var flags = controller.Move(moveDirection * Time.deltaTime);
+            
+            var flags = controller.Move(moveDirection*Time.deltaTime);
             grounded = (flags & CollisionFlags.Below) != 0;
             upMove = moveDirection.y;
         }

@@ -9,6 +9,6 @@ namespace Assets.Scripts.Models
     {
         public string Name;
         public string Animation;
-        public float Damage;
+        public int Damage;
     }
 }

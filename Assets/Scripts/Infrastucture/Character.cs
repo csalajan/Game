@@ -70,7 +70,7 @@ namespace Assets.Scripts.Infrastucture
             }
         }
 
-        public void GetHit(float damage)
+        public virtual void GetHit(int damage)
         {
             if (hitPoints <= 0) return;
 

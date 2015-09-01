@@ -32,7 +32,7 @@ public class Fruit : MonoBehaviour {
 		if (collected)
 			delay -= Time.deltaTime;
 
-		if (delay <= 0.0F)
+		//if (delay <= 0.0F)
 			//Application.LoadLevel (0);
 
 		if(transform.position == pos1)
