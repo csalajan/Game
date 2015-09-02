@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts.Infrastucture.Interfaces;
 using Assets.Scripts.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.Infrastucture
 {
-    public abstract class Character : MonoBehaviour
+    public abstract class Character : MonoBehaviour, IDestroyableObject
     {
         public string Name { get; set; }
 
@@ -85,7 +86,7 @@ namespace Assets.Scripts.Infrastucture
             }
         }
 
-        protected void Die()
+        public void Die()
         {
             dead = true;
             deathTime = Time.time;

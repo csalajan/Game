@@ -18,6 +18,7 @@ namespace Assets.Scripts.Controllers
         private int roamRadius = 20;
         private float idleDuration = 6.0f;
         private float curTime = 0f;
+        
 
         public override void Start()
         {
@@ -52,6 +53,8 @@ namespace Assets.Scripts.Controllers
                 {
                     curTime = Time.time;
                     //Idle();
+                    anim.Stop(animations.Walk);
+                    anim.PlayQueued(animations.Idle);
                 }
 
                 if ((Time.time - curTime) >= idleDuration)

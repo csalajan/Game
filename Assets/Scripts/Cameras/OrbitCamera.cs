@@ -94,9 +94,12 @@ namespace Assets.Scripts.Cameras
             bool isCorrected = false;
             if (Physics.Linecast(trueTargetPosition, position, out collisionHit))
             {
-                position = collisionHit.point;
-                correctedDistance = Vector3.Distance(trueTargetPosition, position);
-                isCorrected = true;
+                if (collisionHit.collider.tag != "Player" && collisionHit.collider.tag != "Collectable")
+                {
+                    position = collisionHit.point;
+                    correctedDistance = Vector3.Distance(trueTargetPosition, position);
+                    isCorrected = true;
+                }
             }
 
             // For smoothing, lerp distance only if either distance wasn't corrected, or correctedDistance is more than currentDistance
